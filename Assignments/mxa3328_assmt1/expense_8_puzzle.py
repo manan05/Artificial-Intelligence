@@ -1,29 +1,57 @@
 # # this is a modified version of the 8 puzzle problem implemented by Manan Arora (mxa3328)
 
 import sys
-from collections import deque 
+from collections import deque
 
 
 class expense_8_puzzle:
+    # this function will read the state from the input file and returns a 2D representation of the state
     def read_state(self, state_file):
         puzzle = []
         with open(state_file, "r") as file:
             for i in file:
                 i.strip()
-                if(i == "END OF FILE"):
+                if (i == "END OF FILE"):
                     break
                 puzzle.append([int(num) for num in i.split()])
         return puzzle
+
+    def valid_moves(self, puzzle):
+        moves = []
+
+        # finding zero (empty place)
+        for i in range(len(puzzle)):
+            for j in range(len(puzzle[0])):
+                if (puzzle[i][j] == 0):
+                    x, y = i, j
+
+        # if zero is in 1st row or 2nd row it can move UP but not if it is in 0th row
+        if (x > 0):
+            moves.append((x-1, y, "up"))
+
+        # if zero is in 0th row or 1st row it can move DOWN but not if it is in 2nd row
+        if (x < 2):
+            moves.append((x + 1, y, "down"))
+
+        # if zero is in 1st column or 2nd column it can move LEFT but not if it is in 0th column
+        if (y > 0):
+            moves.append((x, y - 1, "left"))
+
+        # if zero is in 0th column or 1st column it can move RIGHT but not if it is in 2nd column
+        if (y < 2):
+            moves.append((x, y + 1, "right"))
+            
+        return moves
 
     def bfs(self, start_state, goal_state, dump_flag):
         # Breadth First Search implementation
         start_puzzle = self.read_state(start_state)
         end_puzzle = self.read_state(goal_state)
 
-
+        print(self.valid_moves(start_puzzle))
 
         # print("bfs implementation")
-        # print("start_puzzle", start_puzzle)
+        print("start_puzzle", start_puzzle)
         # print("end_puzzle", end_puzzle)
 
     def ucs(self, start_state, goal_state, dump_flag):
