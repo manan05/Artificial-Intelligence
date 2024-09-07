@@ -1,6 +1,7 @@
-# this is a modified version of the 8 puzzle problem implemented by Manan Arora (mxa3328)
+# # this is a modified version of the 8 puzzle problem implemented by Manan Arora (mxa3328)
 
 import sys
+from collections import deque 
 
 
 class expense_8_puzzle:
@@ -19,9 +20,11 @@ class expense_8_puzzle:
         start_puzzle = self.read_state(start_state)
         end_puzzle = self.read_state(goal_state)
 
-        print("bfs implementation")
-        print("start_puzzle", start_puzzle)
-        print("end_puzzle", end_puzzle)
+
+
+        # print("bfs implementation")
+        # print("start_puzzle", start_puzzle)
+        # print("end_puzzle", end_puzzle)
 
     def ucs(self, start_state, goal_state, dump_flag):
         # uniform cost search implementation
