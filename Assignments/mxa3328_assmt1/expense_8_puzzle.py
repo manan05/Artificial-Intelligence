@@ -1,5 +1,6 @@
 # # this is a modified version of the 8 puzzle problem implemented by Manan Arora (mxa3328)
 
+import heapq
 import sys
 from collections import deque
 
@@ -98,7 +99,7 @@ class expense_8_puzzle:
                 state_tuple = tuple(tuple(row) for row in new_state)
 
                 # If the new state hasn't been visited yet
-                if state_tuple not in visited:
+                if (state_tuple not in visited):
                     visited.add(state_tuple)
                     queue.append(
                         (new_state, path + [(cost, direction)], total_cost + cost))
@@ -106,37 +107,78 @@ class expense_8_puzzle:
 
         print("No solution found.")
 
-    def ucs(self, start_state, goal_state, dump_flag):
+    def ucs(self, start_state_file, goal_state_file, dump_flag):
         # uniform cost search implementation
-
         print("ucs implementation")
-        pass
 
-    def dfs(self, start_state, goal_state, dump_flag):
+        start_state = self.read_state(start_state_file)
+        goal_state = self.read_state(goal_state_file)
+
+        priority_queue = []
+        heapq.heappush(priority_queue, (0, start_state, []))
+
+        visited = set()
+        visited.add(tuple(tuple(i) for i in start_state))
+
+        nodes_popped = 0
+        nodes_expanded = 0
+        max_fringe_size = 0
+
+        while (priority_queue):
+            max_fringe_size = max(max_fringe_size, len(priority_queue))
+
+            total_cost, current_state, path = heapq.heappop(priority_queue)
+            nodes_popped += 1
+
+            if (current_state == goal_state):
+                print("Nodes Popped: ", nodes_popped)
+                print("Nodes Expanded: ", nodes_expanded)
+                print("Max Fringe Size: ", max_fringe_size)
+                print(
+                    f"Solution found at depth: {len(path)} with cost of {total_cost}")
+                print("Steps: ")
+                for i in path:
+                    print(f"Move {i[0]} {i[1]}")
+                return
+
+            for new_move in self.valid_moves(puzzle=current_state):
+                new_state, direction, cost = self.move(
+                    puzzle=current_state, move=new_move)
+                state_tuple = tuple(tuple(row) for row in new_state)
+
+                if (state_tuple not in visited):
+                    visited.add(state_tuple)
+                    heapq.heappush(priority_queue, (total_cost +
+                                   cost, new_state, path + [(cost, direction)]))
+                    nodes_expanded += 1
+
+        print("No solution found.")
+
+    def dfs(self, start_state_file, goal_state_file, dump_flag):
         # depth first search implementation
 
         print("dfs implementation")
         pass
 
-    def dls(self, start_state, goal_state, dump_flag):
+    def dls(self, start_state_file, goal_state_file, dump_flag):
         # depth limited search implementation
 
         print("dls implementation")
         pass
 
-    def ids(self, start_state, goal_state, dump_flag):
+    def ids(self, start_state_file, goal_state_file, dump_flag):
         # Iterative Deepening search implementation
 
         print("ids implementation")
         pass
 
-    def greedy(self, start_state, goal_state, dump_flag):
+    def greedy(self, start_state_file, goal_state_file, dump_flag):
         # greedy search implementation
 
         print("greedy implementation")
         pass
 
-    def a_star(self, start_state, goal_state, dump_flag):
+    def a_star(self, start_state_file, goal_state_file, dump_flag):
         # A* search implementation
 
         print("A* implementation")
@@ -174,32 +216,32 @@ def main():
         else:
             dump_flag = False
 
-    print("start_state: ", start_state)
-    print("goal_state: ", goal_state)
-    print("method: ", method)
-    print("dump_flag: ", dump_flag)
+    # print("start_state: ", start_state)
+    # print("goal_state: ", goal_state)
+    # print("method: ", method)
+    # print("dump_flag: ", dump_flag)
 
     if method == "bfs":
         solution.bfs(start_state_file=start_state,
                      goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "ucs":
-        solution.ucs(start_state=start_state,
-                     goal_state=goal_state, dump_flag=dump_flag)
+        solution.ucs(start_state_file=start_state,
+                     goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "dfs":
-        solution.dfs(start_state=start_state,
-                     goal_state=goal_state, dump_flag=dump_flag)
+        solution.dfs(start_state_file=start_state,
+                     goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "dls":
-        solution.dls(start_state=start_state,
-                     goal_state=goal_state, dump_flag=dump_flag)
+        solution.dls(start_state_file=start_state,
+                     goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "ids":
-        solution.ids(start_state=start_state,
-                     goal_state=goal_state, dump_flag=dump_flag)
+        solution.ids(start_state_file=start_state,
+                     goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "greedy":
-        solution.greedy(start_state=start_state,
-                        goal_state=goal_state, dump_flag=dump_flag)
+        solution.greedy(start_state_file=start_state,
+                        goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "a*":
-        solution.a_star(start_state=start_state,
-                        goal_state=goal_state, dump_flag=dump_flag)
+        solution.a_star(start_state_file=start_state,
+                        goal_state_file=goal_state, dump_flag=dump_flag)
     else:
         print("Please check the inputs arguments and try again...")
         return
