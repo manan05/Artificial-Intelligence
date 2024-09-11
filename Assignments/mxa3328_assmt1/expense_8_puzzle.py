@@ -1,8 +1,12 @@
 # # this is a modified version of the 8 puzzle problem implemented by Manan Arora (mxa3328)
 
 import heapq
+from math import cos
 import sys
 from collections import deque
+from tracemalloc import start
+
+from IPython import start_kernel
 
 
 class expense_8_puzzle:
@@ -65,11 +69,11 @@ class expense_8_puzzle:
         start_state = self.read_state(start_state_file)
         goal_state = self.read_state(goal_state_file)
 
-        # Queue holds (current_state, path taken, total cost)
-        queue = deque([(start_state, [], 0)])
+        queue = deque([(start_state, [], 0)]) # (current_state, path, total cost)
 
         visited = set()  # To store visited states
-        visited.add(tuple(tuple(row) for row in start_state))
+        for i in start_state:
+            visited.add(tuple(tuple(i)))
 
         nodes_popped = 0
         nodes_expanded = 0
@@ -118,7 +122,8 @@ class expense_8_puzzle:
         heapq.heappush(priority_queue, (0, start_state, []))
 
         visited = set()
-        visited.add(tuple(tuple(i) for i in start_state))
+        for i in start_state:
+            visited.add(tuple(tuple(i)))
 
         nodes_popped = 0
         nodes_expanded = 0
@@ -156,9 +161,49 @@ class expense_8_puzzle:
 
     def dfs(self, start_state_file, goal_state_file, dump_flag):
         # depth first search implementation
-
         print("dfs implementation")
-        pass
+        
+        start_state = self.read_state(start_state_file)
+        goal_state = self.read_state(goal_state_file)
+
+        stack = [(start_state, [], 0)]  # [(current_state, path, total cost)]
+
+        visited = set()
+        for i in start_state:
+            visited.add(tuple(tuple(i)))
+
+        nodes_popped = 0
+        nodes_expanded = 0
+        max_fringe_size = 0
+        i = 0
+        while stack:
+            print(i)
+            i += 1
+            max_fringe_size = max(max_fringe_size, len(stack))
+            current_state, path, total_cost = stack.pop()
+            nodes_popped += 1
+
+            if(current_state == goal_state):
+                print("Nodes Popped: ", nodes_popped)
+                print("Nodes Expanded: ", nodes_expanded)
+                print("Max Fringe Size: ", max_fringe_size)
+                print(
+                    f"Solution found at depth: {len(path)} with cost of {total_cost}")
+                print("Steps: ")
+                for i in path:
+                    print(f"Move {i[0]} {i[1]}")
+                return
+            
+            for new_move in self.valid_moves(puzzle=current_state):
+                new_state, direction, cost = self.move(puzzle=current_state, move=new_move)
+                state_tuple = tuple(tuple(i) for i in new_state)
+
+                if state_tuple not in visited:
+                    visited.add(state_tuple)
+                    stack.append((new_state, path + [(cost, direction)], total_cost + cost))
+                    nodes_expanded += 1
+        
+        print("No solution found.")
 
     def dls(self, start_state_file, goal_state_file, dump_flag):
         # depth limited search implementation
