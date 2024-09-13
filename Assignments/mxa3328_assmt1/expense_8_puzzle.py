@@ -125,7 +125,7 @@ class expense_8_puzzle:
                 for i in path:
                     if(dump_flag):
                         with open('trace_dump.txt', 'a') as dump_file:
-                            dump_file.write(f"Move {i[0]} {i[1]}")
+                            dump_file.write(f"Move {i[0]} {i[1]} \n")
                     print(f"Move {i[0]} {i[1]}")
                 return
             
@@ -244,7 +244,6 @@ class expense_8_puzzle:
     # TODO: DUMP FILE
     def dfs(self, start_state_file, goal_state_file, dump_flag):
         # depth first search implementation
-        print("dfs implementation")
         
         start_state = self.read_state(start_state_file)
         goal_state = self.read_state(goal_state_file)
@@ -290,17 +289,127 @@ class expense_8_puzzle:
         
         print("No solution found.")
 
+    # TODO: Dump flag implementation
     def dls(self, start_state_file, goal_state_file, dump_flag):
         # depth limited search implementation
 
-        print("dls implementation")
-        pass
+        depth_limit = int(input("Enter the depth limit for DLS: "))
+        print(f"DLS implementation with depth limit: {depth_limit}")
+    
+        start_state = self.read_state(start_state_file)
+        goal_state = self.read_state(goal_state_file)
+
+        stack = [(start_state, [], 0, 0)]  # [(current_state, path, total cost, current_depth)]
+
+        visited = set()
+        for i in start_state:
+            visited.add(tuple(tuple(i)))
+
+        nodes_popped = 0
+        nodes_generated = 0
+        nodes_expanded = 0
+        max_fringe_size = 0
+
+        while stack:
+            max_fringe_size = max(max_fringe_size, len(stack))
+            current_state, path, total_cost, current_depth = stack.pop()
+            nodes_popped += 1
+
+            # If we reach the goal state
+            if current_state == goal_state:
+                print("Nodes Popped: ", nodes_popped)
+                print("Nodes Generated: ", nodes_generated)
+                print("Nodes Expanded: ", nodes_expanded)
+                print("Max Fringe Size: ", max_fringe_size)
+                print(f"Solution found at depth: {len(path)} with cost of {total_cost}")
+                print("Steps: ")
+                for i in path:
+                    print(f"Move {i[0]} {i[1]}")
+                return
+
+            # Skip expanding if the depth limit has been reached
+            if current_depth >= depth_limit:
+                continue
+
+            nodes_expanded += 1
+
+            # Expand the current state
+            for new_move in self.valid_moves(puzzle=current_state):
+                new_state, direction, cost = self.move(puzzle=current_state, move=new_move)
+                state_tuple = tuple(tuple(i) for i in new_state)
+
+                if state_tuple not in visited:
+                    visited.add(state_tuple)
+                    stack.append((new_state, path + [(cost, direction)], total_cost + cost, current_depth + 1))
+                    nodes_generated += 1
+
+        print("No solution found within the depth limit.")
 
     def ids(self, start_state_file, goal_state_file, dump_flag):
         # Iterative Deepening search implementation
+        depth_limit = 0
 
-        print("ids implementation")
-        pass
+        while True:
+            print(f"Searching with depth limit: {depth_limit}")
+            
+            # Perform depth-limited search with the current depth limit
+            start_state = self.read_state(start_state_file)
+            goal_state = self.read_state(goal_state_file)
+
+            stack = [(start_state, [], 0, 0)]  # [(current_state, path, total cost, current_depth)]
+            visited = set()
+            for i in start_state:
+                visited.add(tuple(tuple(i)))
+
+            nodes_popped = 0
+            nodes_generated = 0
+            nodes_expanded = 0
+            max_fringe_size = 0
+            solution_found = False
+
+            while stack:
+                max_fringe_size = max(max_fringe_size, len(stack))
+                current_state, path, total_cost, current_depth = stack.pop()
+                nodes_popped += 1
+
+                # If we reach the goal state
+                if current_state == goal_state:
+                    print("Nodes Popped: ", nodes_popped)
+                    print("Nodes Generated: ", nodes_generated)
+                    print("Nodes Expanded: ", nodes_expanded)
+                    print("Max Fringe Size: ", max_fringe_size)
+                    print(f"Solution found at depth: {len(path)} with cost of {total_cost}")
+                    print("Steps: ")
+                    for i in path:
+                        print(f"Move {i[0]} {i[1]}")
+                    solution_found = True
+                    break  # Exit the while loop
+
+                # Skip expanding if the depth limit has been reached
+                if current_depth >= depth_limit:
+                    continue
+
+                nodes_expanded += 1
+
+                # Expand the current state
+                for new_move in self.valid_moves(puzzle=current_state):
+                    new_state, direction, cost = self.move(puzzle=current_state, move=new_move)
+                    state_tuple = tuple(tuple(i) for i in new_state)
+
+                    if state_tuple not in visited:
+                        visited.add(state_tuple)
+                        stack.append((new_state, path + [(cost, direction)], total_cost + cost, current_depth + 1))
+                        nodes_generated += 1
+
+            if solution_found:
+                return  # Solution found, exit the function
+
+            # Increment the depth limit and try again
+
+            print(f"No solution found at depth limit: {depth_limit}")
+            print("Incrementing depth limit \n")
+            depth_limit += 1
+
 
     def greedy(self, start_state_file, goal_state_file, dump_flag):
         # greedy search implementation
