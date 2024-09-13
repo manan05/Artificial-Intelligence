@@ -1,12 +1,8 @@
 # # this is a modified version of the 8 puzzle problem implemented by Manan Arora (mxa3328)
 
 import heapq
-from math import cos
 import sys
 from collections import deque
-from tracemalloc import start
-
-from IPython import start_kernel
 
 
 class expense_8_puzzle:
@@ -33,19 +29,19 @@ class expense_8_puzzle:
         moves = []
 
         x, y = self.find_zero(puzzle=puzzle)
-        # if zero is in 1st row or 2nd row it can move UP but not if it is in 0th row
+        # if zero is in 1st row or 2nd, row 0 can move UP but the other tile moves DOWN
         if (x > 0):
             moves.append((x-1, y, "down"))
 
-        # if zero is in 0th row or 1st row it can move DOWN but not if it is in 2nd row
+        # if zero is in 0th row or 1st row it can move DOWN but the other tile moves UP
         if (x < 2):
             moves.append((x + 1, y, "up"))
 
-        # if zero is in 1st column or 2nd column it can move LEFT but not if it is in 0th column
+        # if zero is in 1st column or 2nd column it can move LEFT but the other tile moves RIGHT
         if (y > 0):
             moves.append((x, y - 1, "right"))
 
-        # if zero is in 0th column or 1st column it can move RIGHT but not if it is in 2nd column
+        # if zero is in 0th column or 1st column it can move RIGHT but the other tile moves LEFT
         if (y < 2):
             moves.append((x, y + 1, "left"))
 
@@ -64,7 +60,7 @@ class expense_8_puzzle:
 
     def bfs(self, start_state_file, goal_state_file, dump_flag):
         # Breadth First Search implementation
-
+            
         # Reading the start and goal state of the puzzle
         start_state = self.read_state(start_state_file)
         goal_state = self.read_state(goal_state_file)
@@ -72,22 +68,56 @@ class expense_8_puzzle:
         queue = deque([(start_state, [], 0)]) # (current_state, path, total cost)
 
         visited = set()  # To store visited states
-        for i in start_state:
-            visited.add(tuple(tuple(i)))
+        visited.add(tuple(tuple(row) for row in start_state))
+
+        if(dump_flag):
+            with open('trace_dump.txt', 'a') as dump_file:
+                dump_file.write(f"Queue initially: {queue} \n")
+                dump_file.write(f"Visited Set: {visited} \n")
 
         nodes_popped = 0
         nodes_expanded = 0
+        nodes_generated = 0
         max_fringe_size = 0
 
+        if(dump_flag):
+            with open('trace_dump.txt', 'a') as dump_file:
+                dump_file.write(f"Nodes Popped Initially: {nodes_popped} \n")
+                dump_file.write(f"Nodes Expanded Initially: {nodes_expanded} \n")
+                dump_file.write(f"Nodes Generated Initially: {nodes_generated} \n")
+                dump_file.write(f"Max Fringe Size Initially: {max_fringe_size} \n")
+
         while queue:
+            if(dump_flag):
+                with open('trace_dump.txt', 'a') as dump_file:
+                    dump_file.write(f"Queue: {queue} \n")
+
             max_fringe_size = max(max_fringe_size, len(queue))
             current_state, path, total_cost = queue.popleft()
             nodes_popped += 1
+            if(dump_flag):
+                with open('trace_dump.txt', 'a') as dump_file:
+                    dump_file.write(f"Nodes Popped : {nodes_popped} \n")
+                    dump_file.write(f"Nodes Expanded : {nodes_expanded} \n")
+                    dump_file.write(f"Nodes Generated : {nodes_generated} \n")
+                    dump_file.write(f"Max Fringe Size : {max_fringe_size} \n")
 
             # Check if the current state matches the goal state
             if current_state == goal_state:
+                if(dump_flag):
+                    with open('trace_dump.txt', 'a') as dump_file:
+                        dump_file.write("Solution Found!")
+                        dump_file.write(f"Current State: {current_state} \n")
+                        dump_file.write(f"Goal State: {goal_state} \n")
+                        dump_file.write(f"Nodes Popped Initially: {nodes_popped} \n")
+                        dump_file.write(f"Nodes Expanded Initially: {nodes_expanded} \n")
+                        dump_file.write(f"Nodes Generated Initially: {nodes_generated} \n")
+                        dump_file.write(f"Max Fringe Size Initially: {max_fringe_size} \n")
+                        dump_file.write(f"Solution found at depth: {len(path)} with cost of {total_cost} \n")
+
                 print("Nodes Popped: ", nodes_popped)
                 print("Nodes Expanded: ", nodes_expanded)
+                print("Nodes Generated: ", nodes_generated)
                 print("Max Fringe Size: ", max_fringe_size)
                 print(
                     f"Solution found at depth: {len(path)} with cost of {total_cost}")
@@ -98,70 +128,120 @@ class expense_8_puzzle:
                             dump_file.write(f"Move {i[0]} {i[1]} \n")
                     print(f"Move {i[0]} {i[1]}")
                 return
+            
+            # if the current state not goal state that means it should be expanded
+
+            nodes_expanded += 1
+
+            if(dump_flag):
+                with open('trace_dump.txt', 'a') as dump_file:
+                    dump_file.write(f"Nodes Popped : {nodes_popped} \n")
+                    dump_file.write(f"Nodes Expanded : {nodes_expanded} \n")
+                    dump_file.write(f"Nodes Generated : {nodes_generated} \n")
+                    dump_file.write(f"Max Fringe Size : {max_fringe_size} \n")
 
             # Explore valid moves
             for new_move in self.valid_moves(puzzle=current_state):
+                if(dump_flag):
+                    with open('trace_dump.txt', 'a') as dump_file:
+                        dump_file.write(f"New Moved from Current State: {new_move} \n")
+
                 new_state, direction, cost = self.move(
                     puzzle=current_state, move=new_move)
+                
+                if(dump_flag):
+                    with open('trace_dump.txt', 'a') as dump_file:
+                        dump_file.write(f"New State: {new_state} \n")
+                        dump_file.write(f"Direction: {direction} \n")
+                        dump_file.write(f"Cost: {cost} \n")
+                
                 state_tuple = tuple(tuple(row) for row in new_state)
+
+                if(dump_flag):
+                    with open('trace_dump.txt', 'a') as dump_file:
+                        dump_file.write(f"State Tuple: {state_tuple} \n")
 
                 # If the new state hasn't been visited yet
                 if (state_tuple not in visited):
+                    if(dump_flag):
+                        with open('trace_dump.txt', 'a') as dump_file:
+                            dump_file.write(f"State Tuple: {state_tuple} \n")
+                            dump_file.write(f"Visited: {visited} \n")
+                            dump_file.write(f"Size of Visited: {len(visited)} \n")
+                            dump_file.write(f"State Tuple is not in visited \n")
+                    
                     visited.add(state_tuple)
+
+                    if(dump_flag):
+                        with open('trace_dump.txt', 'a') as dump_file:
+                            dump_file.write(f"Added the state to visited \n")
+                            dump_file.write(f"Visited Now: {visited} \n")
+                            dump_file.write(f"Size of Visited: {len(visited)} \n")
+
                     queue.append(
                         (new_state, path + [(cost, direction)], total_cost + cost))
-                    nodes_expanded += 1
+                    nodes_generated += 1
 
+                    if(dump_flag):
+                        with open('trace_dump.txt', 'a') as dump_file:
+                            dump_file.write(f"Queue now: {queue} \n")
+                            dump_file.write(f"Incrementing nodes_generated: {nodes_generated} \n")
+
+        if(dump_flag):
+            with open('trace_dump.txt', 'a') as dump_file:
+                dump_file.write(f"No Solution found! \n")
         print("No solution found.")
 
-    def ucs(self, start_state_file, goal_state_file, dump_flag):
-        # uniform cost search implementation
-        print("ucs implementation")
 
+    # TODO: DUMP FILE 
+    def ucs(self, start_state_file, goal_state_file, dump_flag):
+        # Uniform Cost Search implementation
+        
         start_state = self.read_state(start_state_file)
         goal_state = self.read_state(goal_state_file)
 
         priority_queue = []
-        heapq.heappush(priority_queue, (0, start_state, []))
+        heapq.heappush(priority_queue, (0, start_state, []))  # (total_cost, current_state, path)
 
         visited = set()
-        for i in start_state:
-            visited.add(tuple(tuple(i)))
+        visited.add(tuple(tuple(row) for row in start_state))
 
         nodes_popped = 0
         nodes_expanded = 0
+        nodes_generated = 0
         max_fringe_size = 0
 
-        while (priority_queue):
+        while priority_queue:
             max_fringe_size = max(max_fringe_size, len(priority_queue))
 
             total_cost, current_state, path = heapq.heappop(priority_queue)
             nodes_popped += 1
 
-            if (current_state == goal_state):
-                print("Nodes Popped: ", nodes_popped)
-                print("Nodes Expanded: ", nodes_expanded)
-                print("Max Fringe Size: ", max_fringe_size)
-                print(
-                    f"Solution found at depth: {len(path)} with cost of {total_cost}")
+            if current_state == goal_state:
+                print(f"Nodes Popped: {nodes_popped}")
+                print(f"Nodes Expanded: {nodes_expanded}")
+                print(f"Nodes Generated: {nodes_generated}")
+                print(f"Max Fringe Size: {max_fringe_size}")
+                print(f"Solution found at depth: {len(path)} with cost of {total_cost}")
                 print("Steps: ")
-                for i in path:
-                    print(f"Move {i[0]} {i[1]}")
+                for move in path:
+                    print(f"Move {move[0]} {move[1]}")
                 return
+            
+            nodes_expanded += 1
 
             for new_move in self.valid_moves(puzzle=current_state):
-                new_state, direction, cost = self.move(
-                    puzzle=current_state, move=new_move)
+                new_state, direction, cost = self.move(puzzle=current_state, move=new_move)
                 state_tuple = tuple(tuple(row) for row in new_state)
 
-                if (state_tuple not in visited):
+                if state_tuple not in visited:
                     visited.add(state_tuple)
-                    heapq.heappush(priority_queue, (total_cost +
-                                   cost, new_state, path + [(cost, direction)]))
-                    nodes_expanded += 1
+                    heapq.heappush(priority_queue, (total_cost + cost, new_state, path + [(cost, direction)]))
+                    nodes_generated += 1
 
         print("No solution found.")
 
+    # TODO: DUMP FILE
     def dfs(self, start_state_file, goal_state_file, dump_flag):
         # depth first search implementation
         
@@ -175,18 +255,18 @@ class expense_8_puzzle:
             visited.add(tuple(tuple(i)))
 
         nodes_popped = 0
+        nodes_generated = 0
         nodes_expanded = 0
         max_fringe_size = 0
-        i = 0
+
         while stack:
-            print(i)
-            i += 1
             max_fringe_size = max(max_fringe_size, len(stack))
             current_state, path, total_cost = stack.pop()
             nodes_popped += 1
 
             if(current_state == goal_state):
                 print("Nodes Popped: ", nodes_popped)
+                print("Nodes Generated: ", nodes_generated)
                 print("Nodes Expanded: ", nodes_expanded)
                 print("Max Fringe Size: ", max_fringe_size)
                 print(
@@ -195,7 +275,9 @@ class expense_8_puzzle:
                 for i in path:
                     print(f"Move {i[0]} {i[1]}")
                 return
-            
+
+            nodes_expanded += 1
+
             for new_move in self.valid_moves(puzzle=current_state):
                 new_state, direction, cost = self.move(puzzle=current_state, move=new_move)
                 state_tuple = tuple(tuple(i) for i in new_state)
@@ -203,7 +285,7 @@ class expense_8_puzzle:
                 if state_tuple not in visited:
                     visited.add(state_tuple)
                     stack.append((new_state, path + [(cost, direction)], total_cost + cost))
-                    nodes_expanded += 1
+                    nodes_generated += 1
         
         print("No solution found.")
 
@@ -383,24 +465,60 @@ def main():
             dump_file.write(f"Command Line Arguments: [{start_state}, {goal_state}, {method}, 'true'] \n")
 
     if method == "bfs":
+        if dump_flag:
+            with open('trace_dump.txt', 'a') as dump_file:
+                dump_file.write(f"Method selected: {method} \n")
+                dump_file.write(f"Implementing  {method} \n")
+
         solution.bfs(start_state_file=start_state,
                      goal_state_file=goal_state, dump_flag=dump_flag)
+        
     elif method == "ucs":
+        if dump_flag:
+            with open('trace_dump.txt', 'a') as dump_file:
+                dump_file.write(f"Method selected: {method} \n")
+                dump_file.write(f"Implementing  {method} \n")
+
         solution.ucs(start_state_file=start_state,
                      goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "dfs":
+        if dump_flag:
+            with open('trace_dump.txt', 'a') as dump_file:
+                dump_file.write(f"Method selected: {method} \n")
+                dump_file.write(f"Implementing  {method} \n")
+
         solution.dfs(start_state_file=start_state,
                      goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "dls":
+        if dump_flag:
+            with open('trace_dump.txt', 'a') as dump_file:
+                dump_file.write(f"Method selected: {method} \n")
+                dump_file.write(f"Implementing  {method} \n")
+
         solution.dls(start_state_file=start_state,
                      goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "ids":
+        if dump_flag:
+            with open('trace_dump.txt', 'a') as dump_file:
+                dump_file.write(f"Method selected: {method} \n")
+                dump_file.write(f"Implementing  {method} \n")
+
         solution.ids(start_state_file=start_state,
                      goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "greedy":
+        if dump_flag:
+            with open('trace_dump.txt', 'a') as dump_file:
+                dump_file.write(f"Method selected: {method} \n")
+                dump_file.write(f"Implementing  {method} \n")
+
         solution.greedy(start_state_file=start_state,
                         goal_state_file=goal_state, dump_flag=dump_flag)
     elif method == "a*":
+        if dump_flag:
+            with open('trace_dump.txt', 'a') as dump_file:
+                dump_file.write(f"Method selected: {method} \n")
+                dump_file.write(f"Implementing  {method} \n")
+
         solution.a_star(start_state_file=start_state,
                         goal_state_file=goal_state, dump_flag=dump_flag)
     else:
