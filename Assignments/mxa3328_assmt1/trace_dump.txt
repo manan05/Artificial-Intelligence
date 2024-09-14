@@ -1,0 +1,157 @@
+Command Line Arguments: [.\start.txt, .\goal.txt, bfs, 'true'] 
+Method selected: bfs 
+Implementing  bfs 
+Queue initially: deque([([[1, 2, 3], [4, 5, 6], [7, 0, 8]], [], 0)]) 
+Visited Set: {((1, 2, 3), (4, 5, 6), (7, 0, 8))} 
+Nodes Popped Initially: 0 
+Nodes Expanded Initially: 0 
+Nodes Generated Initially: 0 
+Max Fringe Size Initially: 0 
+Queue: deque([([[1, 2, 3], [4, 5, 6], [7, 0, 8]], [], 0)]) 
+Nodes Popped : 1 
+Nodes Expanded : 0 
+Nodes Generated : 0 
+Max Fringe Size : 1 
+Nodes Popped : 1 
+Nodes Expanded : 1 
+Nodes Generated : 0 
+Max Fringe Size : 1 
+New Moved from Current State: (1, 1, 'down') 
+New State: [[1, 2, 3], [4, 0, 6], [7, 5, 8]] 
+Direction: down 
+Cost: 5 
+State Tuple: ((1, 2, 3), (4, 0, 6), (7, 5, 8)) 
+State Tuple: ((1, 2, 3), (4, 0, 6), (7, 5, 8)) 
+Visited: {((1, 2, 3), (4, 5, 6), (7, 0, 8))} 
+Size of Visited: 1 
+State Tuple is not in visited 
+Added the state to visited 
+Visited Now: {((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8))} 
+Size of Visited: 2 
+Queue now: deque([([[1, 2, 3], [4, 0, 6], [7, 5, 8]], [(5, 'down')], 5)]) 
+Incrementing nodes_generated: 1 
+New Moved from Current State: (2, 0, 'right') 
+New State: [[1, 2, 3], [4, 5, 6], [0, 7, 8]] 
+Direction: right 
+Cost: 7 
+State Tuple: ((1, 2, 3), (4, 5, 6), (0, 7, 8)) 
+State Tuple: ((1, 2, 3), (4, 5, 6), (0, 7, 8)) 
+Visited: {((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8))} 
+Size of Visited: 2 
+State Tuple is not in visited 
+Added the state to visited 
+Visited Now: {((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8))} 
+Size of Visited: 3 
+Queue now: deque([([[1, 2, 3], [4, 0, 6], [7, 5, 8]], [(5, 'down')], 5), ([[1, 2, 3], [4, 5, 6], [0, 7, 8]], [(7, 'right')], 7)]) 
+Incrementing nodes_generated: 2 
+New Moved from Current State: (2, 2, 'left') 
+New State: [[1, 2, 3], [4, 5, 6], [7, 8, 0]] 
+Direction: left 
+Cost: 8 
+State Tuple: ((1, 2, 3), (4, 5, 6), (7, 8, 0)) 
+State Tuple: ((1, 2, 3), (4, 5, 6), (7, 8, 0)) 
+Visited: {((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8))} 
+Size of Visited: 3 
+State Tuple is not in visited 
+Added the state to visited 
+Visited Now: {((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 8, 0)), ((1, 2, 3), (4, 5, 6), (7, 0, 8))} 
+Size of Visited: 4 
+Queue now: deque([([[1, 2, 3], [4, 0, 6], [7, 5, 8]], [(5, 'down')], 5), ([[1, 2, 3], [4, 5, 6], [0, 7, 8]], [(7, 'right')], 7), ([[1, 2, 3], [4, 5, 6], [7, 8, 0]], [(8, 'left')], 8)]) 
+Incrementing nodes_generated: 3 
+Queue: deque([([[1, 2, 3], [4, 0, 6], [7, 5, 8]], [(5, 'down')], 5), ([[1, 2, 3], [4, 5, 6], [0, 7, 8]], [(7, 'right')], 7), ([[1, 2, 3], [4, 5, 6], [7, 8, 0]], [(8, 'left')], 8)]) 
+Nodes Popped : 2 
+Nodes Expanded : 1 
+Nodes Generated : 3 
+Max Fringe Size : 3 
+Nodes Popped : 2 
+Nodes Expanded : 2 
+Nodes Generated : 3 
+Max Fringe Size : 3 
+New Moved from Current State: (0, 1, 'down') 
+New State: [[1, 0, 3], [4, 2, 6], [7, 5, 8]] 
+Direction: down 
+Cost: 2 
+State Tuple: ((1, 0, 3), (4, 2, 6), (7, 5, 8)) 
+State Tuple: ((1, 0, 3), (4, 2, 6), (7, 5, 8)) 
+Visited: {((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 8, 0)), ((1, 2, 3), (4, 5, 6), (7, 0, 8))} 
+Size of Visited: 4 
+State Tuple is not in visited 
+Added the state to visited 
+Visited Now: {((1, 2, 3), (4, 5, 6), (7, 8, 0)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8)), ((1, 0, 3), (4, 2, 6), (7, 5, 8)), ((1, 2, 3), (4, 0, 6), (7, 5, 8))} 
+Size of Visited: 5 
+Queue now: deque([([[1, 2, 3], [4, 5, 6], [0, 7, 8]], [(7, 'right')], 7), ([[1, 2, 3], [4, 5, 6], [7, 8, 0]], [(8, 'left')], 8), ([[1, 0, 3], [4, 2, 6], [7, 5, 8]], [(5, 'down'), (2, 'down')], 7)]) 
+Incrementing nodes_generated: 4 
+New Moved from Current State: (2, 1, 'up') 
+New State: [[1, 2, 3], [4, 5, 6], [7, 0, 8]] 
+Direction: up 
+Cost: 5 
+State Tuple: ((1, 2, 3), (4, 5, 6), (7, 0, 8)) 
+New Moved from Current State: (1, 0, 'right') 
+New State: [[1, 2, 3], [0, 4, 6], [7, 5, 8]] 
+Direction: right 
+Cost: 4 
+State Tuple: ((1, 2, 3), (0, 4, 6), (7, 5, 8)) 
+State Tuple: ((1, 2, 3), (0, 4, 6), (7, 5, 8)) 
+Visited: {((1, 2, 3), (4, 5, 6), (7, 8, 0)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8)), ((1, 0, 3), (4, 2, 6), (7, 5, 8)), ((1, 2, 3), (4, 0, 6), (7, 5, 8))} 
+Size of Visited: 5 
+State Tuple is not in visited 
+Added the state to visited 
+Visited Now: {((1, 2, 3), (4, 5, 6), (7, 8, 0)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8)), ((1, 0, 3), (4, 2, 6), (7, 5, 8)), ((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (0, 4, 6), (7, 5, 8))} 
+Size of Visited: 6 
+Queue now: deque([([[1, 2, 3], [4, 5, 6], [0, 7, 8]], [(7, 'right')], 7), ([[1, 2, 3], [4, 5, 6], [7, 8, 0]], [(8, 'left')], 8), ([[1, 0, 3], [4, 2, 6], [7, 5, 8]], [(5, 'down'), (2, 'down')], 7), ([[1, 2, 3], [0, 4, 6], [7, 5, 8]], [(5, 'down'), (4, 'right')], 9)]) 
+Incrementing nodes_generated: 5 
+New Moved from Current State: (1, 2, 'left') 
+New State: [[1, 2, 3], [4, 6, 0], [7, 5, 8]] 
+Direction: left 
+Cost: 6 
+State Tuple: ((1, 2, 3), (4, 6, 0), (7, 5, 8)) 
+State Tuple: ((1, 2, 3), (4, 6, 0), (7, 5, 8)) 
+Visited: {((1, 2, 3), (4, 5, 6), (7, 8, 0)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8)), ((1, 0, 3), (4, 2, 6), (7, 5, 8)), ((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (0, 4, 6), (7, 5, 8))} 
+Size of Visited: 6 
+State Tuple is not in visited 
+Added the state to visited 
+Visited Now: {((1, 2, 3), (4, 5, 6), (7, 8, 0)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8)), ((1, 0, 3), (4, 2, 6), (7, 5, 8)), ((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (4, 6, 0), (7, 5, 8)), ((1, 2, 3), (0, 4, 6), (7, 5, 8))} 
+Size of Visited: 7 
+Queue now: deque([([[1, 2, 3], [4, 5, 6], [0, 7, 8]], [(7, 'right')], 7), ([[1, 2, 3], [4, 5, 6], [7, 8, 0]], [(8, 'left')], 8), ([[1, 0, 3], [4, 2, 6], [7, 5, 8]], [(5, 'down'), (2, 'down')], 7), ([[1, 2, 3], [0, 4, 6], [7, 5, 8]], [(5, 'down'), (4, 'right')], 9), ([[1, 2, 3], [4, 6, 0], [7, 5, 8]], [(5, 'down'), (6, 'left')], 11)]) 
+Incrementing nodes_generated: 6 
+Queue: deque([([[1, 2, 3], [4, 5, 6], [0, 7, 8]], [(7, 'right')], 7), ([[1, 2, 3], [4, 5, 6], [7, 8, 0]], [(8, 'left')], 8), ([[1, 0, 3], [4, 2, 6], [7, 5, 8]], [(5, 'down'), (2, 'down')], 7), ([[1, 2, 3], [0, 4, 6], [7, 5, 8]], [(5, 'down'), (4, 'right')], 9), ([[1, 2, 3], [4, 6, 0], [7, 5, 8]], [(5, 'down'), (6, 'left')], 11)]) 
+Nodes Popped : 3 
+Nodes Expanded : 2 
+Nodes Generated : 6 
+Max Fringe Size : 5 
+Nodes Popped : 3 
+Nodes Expanded : 3 
+Nodes Generated : 6 
+Max Fringe Size : 5 
+New Moved from Current State: (1, 0, 'down') 
+New State: [[1, 2, 3], [0, 5, 6], [4, 7, 8]] 
+Direction: down 
+Cost: 4 
+State Tuple: ((1, 2, 3), (0, 5, 6), (4, 7, 8)) 
+State Tuple: ((1, 2, 3), (0, 5, 6), (4, 7, 8)) 
+Visited: {((1, 2, 3), (4, 5, 6), (7, 8, 0)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8)), ((1, 0, 3), (4, 2, 6), (7, 5, 8)), ((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (4, 6, 0), (7, 5, 8)), ((1, 2, 3), (0, 4, 6), (7, 5, 8))} 
+Size of Visited: 7 
+State Tuple is not in visited 
+Added the state to visited 
+Visited Now: {((1, 2, 3), (4, 5, 6), (7, 8, 0)), ((1, 2, 3), (4, 5, 6), (0, 7, 8)), ((1, 2, 3), (4, 5, 6), (7, 0, 8)), ((1, 2, 3), (0, 5, 6), (4, 7, 8)), ((1, 0, 3), (4, 2, 6), (7, 5, 8)), ((1, 2, 3), (4, 0, 6), (7, 5, 8)), ((1, 2, 3), (4, 6, 0), (7, 5, 8)), ((1, 2, 3), (0, 4, 6), (7, 5, 8))} 
+Size of Visited: 8 
+Queue now: deque([([[1, 2, 3], [4, 5, 6], [7, 8, 0]], [(8, 'left')], 8), ([[1, 0, 3], [4, 2, 6], [7, 5, 8]], [(5, 'down'), (2, 'down')], 7), ([[1, 2, 3], [0, 4, 6], [7, 5, 8]], [(5, 'down'), (4, 'right')], 9), ([[1, 2, 3], [4, 6, 0], [7, 5, 8]], [(5, 'down'), (6, 'left')], 11), ([[1, 2, 3], [0, 5, 6], [4, 7, 8]], [(7, 'right'), (4, 'down')], 11)]) 
+Incrementing nodes_generated: 7 
+New Moved from Current State: (2, 1, 'left') 
+New State: [[1, 2, 3], [4, 5, 6], [7, 0, 8]] 
+Direction: left 
+Cost: 7 
+State Tuple: ((1, 2, 3), (4, 5, 6), (7, 0, 8)) 
+Queue: deque([([[1, 2, 3], [4, 5, 6], [7, 8, 0]], [(8, 'left')], 8), ([[1, 0, 3], [4, 2, 6], [7, 5, 8]], [(5, 'down'), (2, 'down')], 7), ([[1, 2, 3], [0, 4, 6], [7, 5, 8]], [(5, 'down'), (4, 'right')], 9), ([[1, 2, 3], [4, 6, 0], [7, 5, 8]], [(5, 'down'), (6, 'left')], 11), ([[1, 2, 3], [0, 5, 6], [4, 7, 8]], [(7, 'right'), (4, 'down')], 11)]) 
+Nodes Popped : 4 
+Nodes Expanded : 3 
+Nodes Generated : 7 
+Max Fringe Size : 5 
+Solution Found!Current State: [[1, 2, 3], [4, 5, 6], [7, 8, 0]] 
+Goal State: [[1, 2, 3], [4, 5, 6], [7, 8, 0]] 
+Nodes Popped Initially: 4 
+Nodes Expanded Initially: 3 
+Nodes Generated Initially: 7 
+Max Fringe Size Initially: 5 
+Solution found at depth: 1 with cost of 8 
+Move 8 left 

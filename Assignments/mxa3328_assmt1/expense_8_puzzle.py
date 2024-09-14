@@ -1,8 +1,9 @@
-# # this is a modified version of the 8 puzzle problem implemented by Manan Arora (mxa3328)
+# this is a modified version of the 8 puzzle problem implemented by Manan Arora (mxa3328)
 
 import heapq
 import sys
 from collections import deque
+import math
 
 
 class expense_8_puzzle:
@@ -259,7 +260,10 @@ class expense_8_puzzle:
         nodes_expanded = 0
         max_fringe_size = 0
 
+        i = 0
         while stack:
+            print(i)
+            i += 1
             max_fringe_size = max(max_fringe_size, len(stack))
             current_state, path, total_cost = stack.pop()
             nodes_popped += 1
@@ -414,9 +418,77 @@ class expense_8_puzzle:
 
     def greedy(self, start_state_file, goal_state_file, dump_flag):
         # greedy search implementation
+        start_state = self.read_state(start_state_file)
+        goal_state = self.read_state(goal_state_file)
 
-        print("greedy implementation")
-        pass
+        # Heuristic Function: Manhattan
+        def heuristic(current_state, goal_state):
+            distance = 0
+            for i in range(3):
+                for j in range(3):
+                    if current_state[i][j] != 0:  # Skip the blank tile
+                        goal_position = [(row, col) for row in range(3) for col in range(3) if goal_state[row][col] == current_state[i][j]][0]
+                        distance += abs(goal_position[0] - i) + abs(goal_position[1] - j)
+            return distance
+        
+        # Heuristic function: Euclidean
+        def euc(current_state,goal_state):
+            distance = 0
+            for i in range(3):
+                for j in range(3):
+                    if current_state[i][j] != 0:  # Skip the blank tile
+                        goal_position = [(row, col) for row in range(3) for col in range(3) if goal_state[row][col] == current_state[i][j]][0]
+                        distance += math.sqrt((goal_position[0] - i)**2 + (goal_position[1] - j)**2)
+            return distance
+        
+        # Priority queue (min-heap), initialized with the start state and its heuristic
+        pq = []
+        heapq.heappush(pq, (heuristic(start_state, goal_state), start_state, [], 0))  # (heuristic, current_state, path, total_cost)
+        
+        visited = set()
+        for i in start_state:
+            visited.add(tuple(tuple(i)))
+        
+        nodes_popped = 0
+        nodes_generated = 0
+        nodes_expanded = 0
+        max_fringe_size = 0
+        
+        while pq:
+            max_fringe_size = max(max_fringe_size, len(pq))
+            
+            # Get the state with the lowest heuristic value
+            heuristic_value, current_state, path, total_cost = heapq.heappop(pq)
+            nodes_popped += 1
+            
+            if current_state == goal_state:
+                print("Nodes Popped: ", nodes_popped)
+                print("Nodes Generated: ", nodes_generated)
+                print("Nodes Expanded: ", nodes_expanded)
+                print("Max Fringe Size: ", max_fringe_size)
+                print(f"Solution found at depth: {len(path)} with cost of {total_cost}")
+                print("Steps: ")
+                for i in path:
+                    print(f"Move {i[0]} {i[1]}")
+                return
+            
+            nodes_expanded += 1
+            
+            # Generate valid moves from the current state
+            for new_move in self.valid_moves(puzzle=current_state):
+                new_state, direction, cost = self.move(puzzle=current_state, move=new_move)
+                state_tuple = tuple(tuple(i) for i in new_state)
+                
+                if state_tuple not in visited:
+                    visited.add(state_tuple)
+                    # Add to priority queue based on the heuristic value of the new state
+                    new_heuristic = heuristic(new_state, goal_state)
+                    heapq.heappush(pq, (new_heuristic, new_state, path + [(cost, direction)], total_cost + cost))
+                    nodes_generated += 1
+        
+        print("No solution found.")
+
+
 
     def a_star(self, start_state_file, goal_state_file, dump_flag):
         # A* search implementation
