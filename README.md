@@ -20,6 +20,7 @@ Code Structure:
     and has all the input validations as mentioned in problem statement
 
 How to Run the code:
+
     - python expense_8_puzzle.py <start-file> <goal-file> <method> <dump-flag>
         - methods: bfs, ucs, dfs, dls, ids, greedy, a*
             - by default: a*
