@@ -1,3 +1,6 @@
+# Manan Arora
+# 1002143328
+
 import sys
 import math
 
@@ -26,32 +29,38 @@ def generate_possible_moves(num_red, num_blue, mode):
 
     return moves
 
+def eval_function(current_state, is_maximizing, mode):
+    red_count = current_state["red"]
+    blue_count = current_state["blue"]
+
+    if (mode == "standard" and is_maximizing) or (mode == "misere" and not is_maximizing):
+        return -2 * red_count - 3 * blue_count
+    else:
+        return 2 * red_count + 3 * blue_count
+
 def minimax_algorithm(current_state, depth_level, alpha_val, beta_val, is_maximizing, mode):
     if depth_level == 0 or current_state["blue"] == 0 or current_state["red"] == 0:
-        if (mode == "standard" and is_maximizing) or (mode == "misere" and not is_maximizing):
-            score = -2 * current_state["red"] - 3 * current_state["blue"]
-        else:
-            score = 2 * current_state["red"] + 3 * current_state["blue"]
-        return score
+        return eval_function(current_state, is_maximizing, mode)
+
+    if not is_maximizing:
+        min_eval = math.inf
+        for move in generate_possible_moves(current_state["red"], current_state["blue"], mode):
+            score = minimax_algorithm(move, depth_level - 1, alpha_val, beta_val, True, mode)
+            min_eval = min(min_eval, score)
+            beta_val = min(beta_val, score)
+            if min_eval <= alpha_val:
+                break
+        return min_eval
     else:
-        if not is_maximizing:
-            min_eval = math.inf
-            for move in generate_possible_moves(current_state["red"], current_state["blue"], mode):
-                score = minimax_algorithm(move, depth_level - 1, alpha_val, beta_val, True, mode)
-                min_eval = min(min_eval, score)
-                beta_val = min(beta_val, score)
-                if min_eval <= alpha_val:
-                    break
-            return min_eval
-        else:
-            max_eval = -math.inf
-            for move in generate_possible_moves(current_state["red"], current_state["blue"], mode):
-                score = minimax_algorithm(move, depth_level - 1, alpha_val, beta_val, False, mode)
-                max_eval = max(max_eval, score)
-                alpha_val = max(alpha_val, max_eval)
-                if max_eval >= beta_val:
-                    break
-            return max_eval
+        max_eval = -math.inf
+        for move in generate_possible_moves(current_state["red"], current_state["blue"], mode):
+            score = minimax_algorithm(move, depth_level - 1, alpha_val, beta_val, False, mode)
+            max_eval = max(max_eval, score)
+            alpha_val = max(alpha_val, max_eval)
+            if max_eval >= beta_val:
+                break
+        return max_eval
+
 
 def best_move(num_red, num_blue, mode, depth):
     optimal_score = -math.inf
