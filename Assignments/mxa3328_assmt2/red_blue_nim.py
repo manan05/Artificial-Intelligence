@@ -97,7 +97,7 @@ def start_game(num_red, num_blue, mode, current_player, max_depth):
                 else:
                     winner = "computer"
 
-            print(f"\n{winner} wins with a score of:",((2 * num_red) + (3 * num_blue)), "\n")
+            print(f"{winner} wins with a score of:",((2 * num_red) + (3 * num_blue)), "\n")
             return
 
         color, num_balls = "", 0
@@ -200,7 +200,7 @@ def main():
     print(f"Blue balls count = {num_blue}")
     print(f"Game version = {mode}")
     print(f"First player move = {first_player}")
-    print(f"Depth = {depth}")
+    print(f"Depth = {depth} \n")
 
     start_game(num_red, num_blue, mode, first_player, depth)
 
