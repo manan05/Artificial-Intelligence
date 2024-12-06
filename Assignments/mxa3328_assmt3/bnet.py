@@ -110,6 +110,18 @@ def read_variables(var_str):
     return variables
 
 def main():
+    structure = {
+        "B": [],
+        "G": ["B"],
+        "C": [],
+        "F": ["G", "C"]
+    }
+
+
+    bnet = BayesianNetwork(structure)
+
+    training_data_file = input
+
     while True:
         query_str = input("Query: ").strip()
         if (query_str.lower()) == "none":
