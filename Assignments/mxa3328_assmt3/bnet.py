@@ -1,27 +1,25 @@
 # Manan Arora
 # 1002143328
 
-from collections import defaultdict
+import sys
 
 class BayesianNetwork:
     def __init__(self, structure):
         self.structure = structure
-        self.cpts = {}  # Conditional Probability
+        self.cpts = {}
 
     def learn_cpts(self, data):
         counts = {}
         totals = {}
 
-        for row in data:
-            values = {var: row[idx] for idx, var in enumerate(self.structure.keys())}
-
+        for values in data:
             for var in self.structure:
                 parent_values = tuple(values[parent] for parent in self.structure[var])
 
                 if var not in counts:
                     counts[var] = {}
                 
-                if (values[var] , parent_values) not in counts[var]:
+                if (values[var], parent_values) not in counts[var]:
                     counts[var][(values[var], parent_values)] = 0
                 counts[var][(values[var], parent_values)] += 1
 
@@ -32,47 +30,53 @@ class BayesianNetwork:
         for var in counts:
             self.cpts[var] = {}
             for (value, parent_values), count in counts[var].items():
-                self.cpts[var][(value, parent_values)] = count/ totals[(var, parent_values)]
+                self.cpts[var][(value, parent_values)] = count / totals[(var, parent_values)]
 
     def get_probability(self, var, value, parent_values):
         return self.cpts[var].get((value, parent_values), 0.0)
     
-    def joint_probability(self, query):
+    def joint_probability(self, assignment):
         prob = 1.0
-        for var in query:
-            parent_values = [query[parent] for parent in self.structure[var]]
-            prob *= self.get_probability(var, query[var], tuple(parent_values))
+        for var in self.structure:
+            parent_values = tuple(assignment[parent] for parent in self.structure[var])
+            prob *= self.get_probability(var, assignment[var], parent_values)
         return prob
     
     def inference_by_enumeration(self, query, evidence):
-        hidden_vars = set(self.structure.keys()) - set(query.keys()) - set(evidence.keys())
+        all_vars = set(self.structure.keys())
+
+        hidden_vars = all_vars - set(query.keys()) - set(evidence.keys())
+
         full_query = {**query, **evidence}
 
-        def extend_query(curr_query, remaining_vars):
+        def extend_and_sum(curr_query, remaining_vars):
             if not remaining_vars:
-                return [curr_query]
+                return self.joint_probability(curr_query)
+
             next_var = remaining_vars.pop()
-            extended_queries = []
+            total_prob = 0.0
+
             for value in [0, 1]:
-                new_query = curr_query.copy()
-                new_query[next_var] = value
-                extended_queries.extend(extend_query(new_query, remaining_vars.copy()))
-            return extended_queries
-        
-        all_queries = extend_query(full_query, hidden_vars.copy())
-        numerator = sum(self.joint_probability(q) for q in all_queries)
+                curr_query[next_var] = value
+                total_prob += extend_and_sum(curr_query.copy(), remaining_vars.copy())
+            return total_prob
 
-        all_evidence = extend_query(evidence, hidden_vars.copy())
-        denominator = sum(self.joint_probability(q) for q in all_evidence)
+        numerator = extend_and_sum(full_query.copy(), list(hidden_vars))
 
-        return numerator / denominator if denominator > 0 else 0
+        evidence_query = evidence.copy()
+        denominator = extend_and_sum(evidence_query, list(hidden_vars | set(query.keys())))
 
+        if denominator == 0:
+            print("Error: Denominator (P(evidence)) is 0. Cannot compute conditional probability.")
+            return 0
+
+        return numerator / denominator
 
 def read_query(query):
     if "given" in query:
         parts = query.split("given")
         if len(parts) != 2:
-            print("Inavlid format. Use <query variables> given <evidence variables>")
+            print("Invalid format. Use <query variables> given <evidence variables>")
             return
         
         query_part = parts[0].strip()
@@ -97,19 +101,31 @@ def read_query(query):
 def read_variables(var_str):
     variables = {}
 
-    # set for allowed variables
     allowed_vars = {"B", "G", "C", "F"}
     t_or_f = {"t", "f"}
 
     for var in var_str.split():
-        if(len(var) != 2 or var[0] not in allowed_vars or var[1].lower() not in t_or_f):
+        if len(var) != 2 or var[0] not in allowed_vars or var[1].lower() not in t_or_f:
             print(f"Invalid variable: {var}. Use format 'Bt', 'Bf', etc.")
             return
         variables[var[0]] = 1 if var[1] == 't' else 0
     
     return variables
 
+def read_training_data(file_path):
+    with open(file_path, "r") as file:
+        data = [list(map(int, line.strip().split())) for line in file.readlines()]
+    
+    mapped_data = [{"B": row[0], "G": row[1], "C": row[2], "F": row[3]} for row in data]
+    return mapped_data
+
 def main():
+    if len(sys.argv) != 2:
+        print("Usage: python bnet.py <training_data_file>")
+        sys.exit(1)
+
+    training_data_file = sys.argv[1]
+
     structure = {
         "B": [],
         "G": ["B"],
@@ -117,22 +133,26 @@ def main():
         "F": ["G", "C"]
     }
 
-
     bnet = BayesianNetwork(structure)
 
-    training_data_file = input
+    try:
+        training_data = read_training_data(training_data_file)
+    except FileNotFoundError:
+        print(f"Error: File '{training_data_file}' not found.")
+        sys.exit(1)
+
+    bnet.learn_cpts(training_data)
 
     while True:
         query_str = input("Query: ").strip()
-        if (query_str.lower()) == "none":
+        if query_str.lower() == "none":
             print("Exiting program.")
             break
 
         query, evidence = read_query(query_str)
-        if (query is not None):
-            print(f"Parsed Query: {query}")
-            print(f"Parsed Evidence: {evidence}")
+        if query is not None:
+            probability = bnet.inference_by_enumeration(query, evidence)
+            print(f"Probability: {probability:.10f}")
 
-if (__name__ == "__main__"):
+if __name__ == "__main__":
     main()
-    
